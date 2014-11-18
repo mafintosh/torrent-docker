@@ -1,0 +1,7 @@
+image.tar
+image.db
+image.db.tgz
+index.tgz
+node_modules
+mnt
+container
