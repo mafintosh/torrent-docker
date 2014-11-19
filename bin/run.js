@@ -8,19 +8,28 @@ var pretty = require('pretty-bytes')
 var proc = require('child_process')
 var freeport = require('freeport')
 var net = require('net')
+var minimist = require('minimist')
 
-var torrent = process.argv[2] 
+var argv = minimist(process.argv.slice(2), {alias:{peer:'p', tracker:'t'}})
+var trackers = argv.t && [].concat(argv.t)
+
+var torrent = argv._[0]
 if (!torrent) {
   console.error('Usage: run [torrent]')
   process.exit(1)
 }
 
-var engine = torrents(fs.readFileSync(torrent))
-var container = process.argv[3] || Math.random().toString(16).slice(1)
+var engine = torrents(fs.readFileSync(torrent), {trackers:trackers})
+var container = process.argv[3] || Math.random().toString(16).slice(2)
 var mnt = container+'/mnt'
 var data = container+'/data'
 
-engine.swarm.add('128.199.33.21:6881')
+engine.swarm.add('128.199.33.21:6881') // TODO: remove me
+
+var peers = [].concat(argv.peer || [])
+peers.forEach(function(p) {
+  engine.swarm.add(p)
+})
 
 engine.on('peer', function(peer) {
 //  console.log(peer)
@@ -84,6 +93,7 @@ server.on('listening', function() {
     readable: true
   }, function(err, fs) {
     if (err) throw err
+    if (argv.docker === false) return console.log('torrent mounted. go to: '+container+'/mnt')
     console.log('index loaded. booting vm...')
     fs.readdir('/', function(err, files) {
       if (err) throw err
