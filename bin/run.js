@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var torrents = require('torrent-stream')
-var filesystem = require('./filesystem')
+var filesystem = require('../filesystem')
 var mkdirp = require('mkdirp')
 var fs = require('fs')
 var pretty = require('pretty-bytes')
@@ -11,7 +11,7 @@ var net = require('net')
 
 var torrent = process.argv[2] 
 if (!torrent) {
-  console.error('Usage: docker-run [torrent]')
+  console.error('Usage: run [torrent]')
   process.exit(1)
 }
 

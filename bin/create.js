@@ -14,7 +14,7 @@ var createTorrent = require('create-torrent')
 var image = process.argv[2]
 
 if (!image) {
-  console.error('Usage: create-torrent [image]')
+  console.error('Usage: create [image]')
   process.exit(1)
 }
 

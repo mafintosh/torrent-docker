@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 
 var torrents = require('torrent-stream')
-var filesystem = require('./filesystem')
 var path = require('path')
 var mkdirp = require('mkdirp')
 var fs = require('fs')
 
 var torrent = process.argv[2] 
 if (!torrent) {
-  console.error('Usage: seed-torrent [torrent]')
+  console.error('Usage: seed [torrent]')
   process.exit(1)
 }
 
@@ -18,7 +17,7 @@ var engine = torrents(fs.readFileSync(torrent), {
 
 engine.swarm.add('127.0.0.1:51413')
 engine.on('peer', function(peer) {
-  console.log(peer)
+  console.log('adding', peer)
 })
 
 engine.files.forEach(function(f) {
