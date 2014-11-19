@@ -14,13 +14,14 @@ var argv = minimist(process.argv.slice(2), {alias:{peer:'p', tracker:'t'}})
 var trackers = argv.t && [].concat(argv.t)
 
 var torrent = argv._[0]
-if (!torrent) {
-  console.error('Usage: run [torrent]')
+var container = argv._[1]
+
+if (!torrent || !container) {
+  console.error('Usage: run [torrent] [container]')
   process.exit(1)
 }
 
 var engine = torrents(fs.readFileSync(torrent), {trackers:trackers})
-var container = process.argv[3] || Math.random().toString(16).slice(2)
 var mnt = container+'/mnt'
 var data = container+'/data'
 
@@ -31,9 +32,9 @@ peers.forEach(function(p) {
   engine.swarm.add(p)
 })
 
-engine.on('peer', function(peer) {
-//  console.log(peer)
-})
+// engine.on('peer', function(peer) {
+//   console.log(peer)
+// })
 
 engine.files.forEach(function(f) {
   f.select()
@@ -80,7 +81,7 @@ server.once('error', function() {
 server.on('listening', function() {
   console.log('mounting container drive here: '+container+'/mnt')
   console.log('access log server by doing: nc localhost %d', server.address().port)
-  console.log('loading index...')
+  console.log('downloading filesystem index...')
   filesystem(mnt, data, {
     createImageStream: function(opts) {
       return engine.files[0].createReadStream(opts)
@@ -89,13 +90,13 @@ server.on('listening', function() {
       return engine.files[1].createReadStream()
     },
     log: log,
-    uid: process.getuid(),
-    gid: process.getgid(),
+    uid: argv.uid !== undefined ? Number(argv.uid) : process.getuid(),
+    gid: argv.gid !== undefined ? Number(argv.gid) : process.getgid(),
     readable: true
   }, function(err, fs) {
     if (err) throw err
     if (argv.docker === false) return console.log('torrent mounted...')
-    console.log('index loaded. booting vm...')
+    console.log('filesystem index loaded. booting vm...')
     fs.readdir('/', function(err, files) {
       if (err) throw err
 
