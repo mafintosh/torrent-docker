@@ -78,6 +78,7 @@ server.once('error', function() {
 })
 
 server.on('listening', function() {
+  console.log('mounting container drive here: '+container+'/mnt')
   console.log('access log server by doing: nc localhost %d', server.address().port)
   console.log('loading index...')
   filesystem(mnt, data, {
@@ -93,7 +94,7 @@ server.on('listening', function() {
     readable: true
   }, function(err, fs) {
     if (err) throw err
-    if (argv.docker === false) return console.log('torrent mounted. go to: '+container+'/mnt')
+    if (argv.docker === false) return console.log('torrent mounted...')
     console.log('index loaded. booting vm...')
     fs.readdir('/', function(err, files) {
       if (err) throw err
