@@ -5,3 +5,4 @@ index.tgz
 node_modules
 mnt
 container
+*.torrent
