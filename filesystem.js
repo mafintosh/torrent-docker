@@ -356,7 +356,6 @@ module.exports = function(mnt, container, opts, cb) {
       log('create', path, mode)
 
       copyOnWrite(path, mode, true, function(err) {
-        console.log('err:', err)
         if (err) return cb(err)
         open(path, 1, cb)
       })      
