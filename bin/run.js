@@ -20,8 +20,7 @@ var container = process.argv[3] || Math.random().toString(16).slice(1)
 var mnt = container+'/mnt'
 var data = container+'/data'
 
-engine.swarm.add('127.0.0.1:51413')
-engine.swarm.add('127.0.0.1:6881')
+engine.swarm.add('128.199.33.21:6881')
 
 engine.on('peer', function(peer) {
 //  console.log(peer)
@@ -98,7 +97,7 @@ server.on('listening', function() {
         })
         .join('').trim().split(/\s+/)
 
-      proc.spawn('docker', ['run', '-it', '--rm', '--entrypoint=/bin/bash'].concat(files).concat('scratch'), {stdio:'inherit'}).on('exit', function() {
+      proc.spawn('docker', ['run', '--net=host', '-it', '--rm', '--entrypoint=/bin/bash'].concat(files).concat('scratch'), {stdio:'inherit'}).on('exit', function() {
         process.exit()
       })
     })
