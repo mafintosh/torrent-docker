@@ -51,7 +51,7 @@ var server = net.createServer(function(socket) {
 })
 
 var log = function() {
-  var msg = Array.prototype.join.call(arguments, ' ')
+  var msg = require('util').format.apply(null, arguments)
   sockets.forEach(function(s) {
     s.write(msg+'\n')
   })
@@ -62,37 +62,45 @@ setInterval(function() {
 }, 1000)
 
 server.listen(10000)
-
-console.log('access log server by doing: nc localhost %d', server.address().port)
-console.log('loading index...')
-filesystem(mnt, data, {
-  createImageStream: function(opts) {
-    return engine.files[0].createReadStream(opts)
-  },
-  createIndexStream: function() {
-    return engine.files[1].createReadStream()
-  },
-  log: log,
-  uid: process.getuid(),
-  gid: process.getgid(),
-  readable: true
-}, function(err, fs) {
-  if (err) throw err
-  console.log('index loaded. booting vm...')
-  fs.readdir('/', function(err, files) {
+server.once('error', function() {
+  freeport(function(err, port) {
     if (err) throw err
+    server.listen(port)
+  })
+})
 
-    files = files
-      .filter(function(file) {
-        return file !== '.' && file !== '..' && file !== 'proc' && file !== 'dev'
-      })
-      .map(function(file) {
-        return '-v '+container+'/mnt/'+file+':/'+file+' '
-      })
-      .join('').trim().split(/\s+/)
+server.on('listening', function() {
+  console.log('access log server by doing: nc localhost %d', server.address().port)
+  console.log('loading index...')
+  filesystem(mnt, data, {
+    createImageStream: function(opts) {
+      return engine.files[0].createReadStream(opts)
+    },
+    createIndexStream: function() {
+      return engine.files[1].createReadStream()
+    },
+    log: log,
+    uid: process.getuid(),
+    gid: process.getgid(),
+    readable: true
+  }, function(err, fs) {
+    if (err) throw err
+    console.log('index loaded. booting vm...')
+    fs.readdir('/', function(err, files) {
+      if (err) throw err
 
-    proc.spawn('docker', ['run', '-it', '--rm', '--entrypoint=/bin/bash'].concat(files).concat('scratch'), {stdio:'inherit'}).on('exit', function() {
-      process.exit()
+      files = files
+        .filter(function(file) {
+          return file !== '.' && file !== '..' && file !== 'proc' && file !== 'dev'
+        })
+        .map(function(file) {
+          return '-v '+container+'/mnt/'+file+':/'+file+' '
+        })
+        .join('').trim().split(/\s+/)
+
+      proc.spawn('docker', ['run', '-it', '--rm', '--entrypoint=/bin/bash'].concat(files).concat('scratch'), {stdio:'inherit'}).on('exit', function() {
+        process.exit()
+      })
     })
   })
 })
