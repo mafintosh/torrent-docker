@@ -1,4 +1,4 @@
-Usage: docker-instant seed [torrent-file]
+Usage: torrent-docker seed [torrent-file]
 
   Seeds a docker image torrent.
   You can also seed the torrent using your favorite torrent client

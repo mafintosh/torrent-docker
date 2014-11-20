@@ -1,10 +1,10 @@
-# docker-instant
+# torrent-docker
 
 MAD SCIENCE realtime boot of remote docker images using bittorrent
 
 ```
-npm install -g docker-instant
-docker-instant --help
+npm install -g torrent-docker
+torrent-docker --help
 ```
 
 ## HOLD ON TO YOUR BRAIN
@@ -12,7 +12,7 @@ docker-instant --help
 Docker images are HUGE. A simple `hello world` node app easily takes up `> 600MB` space.
 Downloading/uploading these images can a looong time.
 
-To fix this `docker-instant` implements a union file system that allows you to mount a docker image
+To fix this `torrent-docker` implements a union file system that allows you to mount a docker image
 shared using bittorrent and boot a container - all in realtime!
 
 ![whoa](http://i.imgur.com/rfFWukr.gif)
@@ -37,14 +37,14 @@ docker build -t test-image
 Now all we need to do is create a torrent from the docker image
 
 ```
-docker-instant create test-image
+torrent-docker create test-image
 ```
 
 This creates a file `test-image.torrent` and a data folder `test-image/`.
 Share this torrent using your favorite torrent client or do
 
 ```
-docker-instant seed test-image.torrent # will print a activity log
+torrent-docker seed test-image.torrent # will print a activity log
 ```
 
 ### Realtime boot the docker image
@@ -53,7 +53,7 @@ Now copy `test-image.torrent` to another machine.
 To boot the image do
 
 ```
-docker-instant boot test-image.torrent my-container
+torrent-docker boot test-image.torrent my-container
 ```
 
 This will mount the torrent as a union file system (that is writable!) and boot the docker image.
@@ -69,7 +69,7 @@ After a couple of seconds (depending on your internet connection, ymmw) you shou
 running in your image! If for some reason your boot process cannot find a seeder you can specify them doing
 
 ```
-docker-instant boot test-image.torrent my-container --peer 128.199.33.21:6441
+torrent-docker boot test-image.torrent my-container --peer 128.199.33.21:6441
 ```
 
 ## Dependencies

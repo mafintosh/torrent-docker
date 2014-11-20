@@ -1,4 +1,4 @@
-Usage: docker-instant boot [torrent-file] [container-name]
+Usage: torrent-docker boot [torrent-file] [container-name]
 
   Starts a new docker containers based on the image shared by
   the torrent file. The container state will be stored in ./container-name
@@ -12,4 +12,3 @@ Usage: docker-instant boot [torrent-file] [container-name]
 
   You can attach to the debug log by following the instruction printed out when
   booting this container (usualy nc localhost 10000)
-  

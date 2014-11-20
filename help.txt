@@ -1,4 +1,4 @@
-Usage: docker-instant [cmd]
+Usage: torrent-docker [cmd]
 
 Available commands are
 

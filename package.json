@@ -1,13 +1,13 @@
 {
-  "name": "docker-instant",
+  "name": "torrent-docker",
   "version": "1.2.0",
-  "description": "",
+  "description": "MAD SCIENCE realtime boot of remote docker images using bittorrent",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "docker-instant": "./bin.js"
+    "torrent-docker": "./bin.js"
   },
   "author": "",
   "license": "ISC",
@@ -32,5 +32,14 @@
     "tar-stream": "^1.1.1",
     "through2": "^0.6.3",
     "torrent-stream": "^0.15.1"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mafintosh/torrent-docker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mafintosh/torrent-docker/issues"
+  },
+  "homepage": "https://github.com/mafintosh/torrent-docker"
 }
