@@ -54,7 +54,12 @@ module.exports = function(mnt, container, opts, cb) {
 
   var createReadStream = function(entry, offset) {
     var end = entry.start + entry.size - 1
-    return createImageStream({start:entry.start+offset, end:end})
+    var start = entry.start+offset
+
+    if (end < start) return empty()
+    if (!entry.size) return empty()
+
+    return createImageStream({start:start, end:end})
   }
 
   var ready = function() {
@@ -124,6 +129,7 @@ module.exports = function(mnt, container, opts, cb) {
     var files = []
 
     var toFlag = function(flags) {
+      flags = flags & 3
       if (flags === 0) return 'r'
       if (flags === 1) return 'w'
       return 'r+'
@@ -154,7 +160,7 @@ module.exports = function(mnt, container, opts, cb) {
     var copyOnWrite = function(path, mode, upsert, cb) {
       log('copy-on-write', path)
 
-      var target = p.join(store, 'layer', shasum(path))
+      var target = p.join(store, 'layer', shasum(path+'-'+Date.now()))
 
       var done = function(entry) {
         db.put(toIndexKey(entry.name), entry, {valueEncoding:'json'}, function(err) {
