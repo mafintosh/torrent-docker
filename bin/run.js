@@ -67,7 +67,7 @@ var log = function() {
 }
 
 setInterval(function() {
-  log('down: %s/s, up: %s/s, peers: %d', pretty(engine.swarm.downloadSpeed()), pretty(engine.swarm.uploadSpeed()), engine.swarm.wires.length)
+//  log('down: %s/s, up: %s/s, peers: %d', pretty(engine.swarm.downloadSpeed()), pretty(engine.swarm.uploadSpeed()), engine.swarm.wires.length)
 }, 1000)
 
 server.listen(10000)
@@ -91,8 +91,7 @@ server.on('listening', function() {
     },
     log: log,
     uid: argv.uid !== undefined ? Number(argv.uid) : process.getuid(),
-    gid: argv.gid !== undefined ? Number(argv.gid) : process.getgid(),
-    readable: true
+    gid: argv.gid !== undefined ? Number(argv.gid) : process.getgid()
   }, function(err, fs) {
     if (err) throw err
     if (argv.docker === false) return console.log('torrent mounted...')
@@ -109,9 +108,21 @@ server.on('listening', function() {
         })
         .join('').trim().split(/\s+/)
 
-      proc.spawn('docker', ['run', '--net=host', '-it', '--rm', '--entrypoint=/bin/bash'].concat(files).concat('scratch'), {stdio:'inherit'}).on('exit', function() {
-        process.exit()
+      var spawn = function() {
+        proc.spawn('docker', ['run', '--net', 'host', '-it', '--rm', '--entrypoint=/bin/bash'].concat(files).concat('scratch'), {stdio:'inherit'}).on('exit', function() {
+          process.exit()
+        })        
+      }
+
+      var ns = new Buffer('nameserver 8.8.8.8\nnameserver 8.8.4.4\n')
+      fs.open('/etc/resolv.conf', 1, function(err, fd) {
+        if (err < 0) return spawn()
+        fs.write('/etc/resolv.conf', 0, ns.length, ns, fd, function(err) {
+          if (err < 0) return spawn()
+          fs.release('/etc/resolv.conf', fd, spawn)
+        })
       })
+
     })
   })
 })
