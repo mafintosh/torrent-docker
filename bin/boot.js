@@ -16,8 +16,8 @@ var trackers = argv.t && [].concat(argv.t)
 var torrent = argv._[0]
 var container = argv._[1]
 
-if (!torrent || !container) {
-  console.error('Usage: run [torrent] [container]')
+if (!torrent || !container || argv.help) {
+  console.error(fs.readFileSync(__dirname+'/../docs/boot.txt', 'utf-8'))
   process.exit(1)
 }
 

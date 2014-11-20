@@ -7,8 +7,8 @@ var mkdirp = require('mkdirp')
 var fs = require('fs')
 
 var torrent = process.argv[2] 
-if (!torrent) {
-  console.error('Usage: seed [torrent]')
+if (!torrent || process.argv.indexOf('--help') > -1) {
+  console.error(fs.readFileSync(__dirname+'/../docs/seed.txt', 'utf-8'))
   process.exit(1)
 }
 

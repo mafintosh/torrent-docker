@@ -4,6 +4,7 @@ MAD SCIENCE realtime boot of remote docker images using bittorrent
 
 ```
 npm install -g docker-instant
+docker-instant --help
 ```
 
 ## What?!

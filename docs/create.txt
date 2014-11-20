@@ -1,0 +1,5 @@
+Usage: docker-instant create [image-name]
+
+  Creates a new torrent from an docker image.
+  The torrent file will be saved in ./image-name.torrent
+  and the torrent content will be stored in ./image-name/

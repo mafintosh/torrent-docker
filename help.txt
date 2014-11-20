@@ -1,0 +1,10 @@
+Usage: docker-instant [cmd]
+
+Available commands are
+
+  create
+  seed
+  boot
+  destroy
+
+Add --help after any command for detailed help

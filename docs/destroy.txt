@@ -1,0 +1,3 @@
+Usage: docker-instant destroy [container-name]
+
+  Completely removes a local container

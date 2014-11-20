@@ -1,0 +1,15 @@
+Usage: docker-instant boot [torrent-file] [container-name]
+
+  Starts a new docker containers based on the image shared by
+  the torrent file. The container state will be stored in ./container-name
+  and the union file system mounted in ./container-name/mnt
+
+  --peer,-p      to force connect to a peer
+  --tracker,-t   to add additional trackers
+  --net          to set the docker --net option
+  --no-docker    do not boot the docker container - only mount the filesystem
+  --nomount      do not mount this folder from the torrent
+
+  You can attach to the debug log by following the instruction printed out when
+  booting this container (usualy nc localhost 10000)
+  

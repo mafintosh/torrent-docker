@@ -13,8 +13,8 @@ var createTorrent = require('create-torrent')
 
 var image = process.argv[2]
 
-if (!image) {
-  console.error('Usage: create [image]')
+if (!image || process.argv.indexOf('--help') > -1) {
+  console.error(fs.readFileSync(__dirname+'/../docs/create.txt', 'utf-8'))
   process.exit(1)
 }
 
