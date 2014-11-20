@@ -7,8 +7,6 @@ npm install -g docker-instant
 docker-instant --help
 ```
 
-## What?!
-
 Docker images are HUGE. A simple `hello world` node app takes up `> 600MB` space.
 Downloading/uploading these images can a looong time.
 
@@ -44,7 +42,7 @@ This creates a file `test-image.torrent` and a data folder `test-image/`.
 Share this torrent using your favorite torrent client or do
 
 ```
-docker-instant seed `test-image.torrent` # will print a activity log
+docker-instant seed test-image.torrent # will print a activity log
 ```
 
 ### Realtime boot the docker image
