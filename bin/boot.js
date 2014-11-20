@@ -26,7 +26,7 @@ var mnt = container+'/mnt'
 var data = container+'/data'
 
 // TODO: remove me - this is the address of registry.mathiasbuus.eu - incase i forget for me demo
-engine.swarm.add('128.199.33.21:6881')
+// engine.swarm.add('128.199.33.21:6881')
 
 var peers = [].concat(argv.peer || [])
 peers.forEach(function(p) {
