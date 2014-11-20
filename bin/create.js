@@ -10,10 +10,13 @@ var lexint = require('lexicographic-integer')
 var tar = require('tar-stream')
 var tarfs = require('tar-fs')
 var createTorrent = require('create-torrent')
+var minimist = require('minimist')
 
-var image = process.argv[2]
+var argv = minimist(process.argv.slice(2))
 
-if (!image || process.argv.indexOf('--help') > -1) {
+var image = argv._[0]
+
+if (!image || argv.help) {
   console.error(fs.readFileSync(__dirname+'/../docs/create.txt', 'utf-8'))
   process.exit(1)
 }

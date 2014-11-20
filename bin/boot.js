@@ -6,7 +6,6 @@ var mkdirp = require('mkdirp')
 var fs = require('fs')
 var pretty = require('pretty-bytes')
 var proc = require('child_process')
-var freeport = require('freeport')
 var net = require('net')
 var minimist = require('minimist')
 
@@ -26,7 +25,8 @@ var engine = torrents(fs.readFileSync(torrent), {trackers:trackers})
 var mnt = container+'/mnt'
 var data = container+'/data'
 
-engine.swarm.add('128.199.33.21:6881') // TODO: remove me
+// TODO: remove me - this is the address of registry.mathiasbuus.eu - incase i forget for me demo
+engine.swarm.add('128.199.33.21:6881')
 
 var peers = [].concat(argv.peer || [])
 peers.forEach(function(p) {
@@ -41,10 +41,8 @@ engine.files.forEach(function(f) {
   f.select()
 })
 
-freeport(function(err, port) {
-  if (err) return
-  engine.listen(port)
-  console.log('engine is listening on port %d', port)
+engine.listen(function() {
+  console.log('engine is listening on port %d', engine.port)
 })
 
 mkdirp.sync(mnt)

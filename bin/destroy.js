@@ -3,9 +3,12 @@
 var umount = require('../umount')
 var rimraf = require('rimraf')
 var fs = require('fs')
+var minimist = require('minimist')
 
-var name = process.argv[2]
-if (!name || process.argv.indexOf('--destroy') > -1) {
+var argv = minimist(process.argv.slice(2))
+var name = argv._[0]
+
+if (!name || argv.help) {
   console.error(fs.readFileSync(__dirname+'/../docs/destroy.txt', 'utf-8'))
   process.exit(0)
 }
