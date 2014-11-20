@@ -7,7 +7,9 @@ npm install -g docker-instant
 docker-instant --help
 ```
 
-Docker images are HUGE. A simple `hello world` node app takes up `> 600MB` space.
+## HOLD ON TO YOUR BRAIN
+
+Docker images are HUGE. A simple `hello world` node app easily takes up `> 600MB` space.
 Downloading/uploading these images can a looong time.
 
 To fix this `docker-instant` implements a union file system that allows you to mount a docker image
