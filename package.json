@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bittorrent-tracker": "^2.7.0",
     "create-torrent": "^3.2.0",
     "cuid": "^1.2.4",
     "docker-remote-api": "^4.4.0",

@@ -2,9 +2,10 @@ Usage: torrent-docker [cmd]
 
 Available commands are
 
-  create
-  seed
-  boot
-  destroy
+  create    create a new docker torrent
+  seed      seed a docker torrent
+  boot      boot a container from a torrent
+  destroy   destroy a container
+  tracker   start a tracker
 
 Add --help after any command for detailed help

@@ -1,0 +1,6 @@
+Usage: torrent-docker tracker
+
+  Start a torrent tracker. Pass an address to this tracker
+  to the seed and boot command using --tracker [addr]
+
+  --port, -p   Port to listen on. Defaults to 80

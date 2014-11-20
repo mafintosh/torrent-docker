@@ -43,7 +43,7 @@ var getImage = function(cb) {
   })
 }
 
-var dir = image.replace(/\//g, '-')
+var dir = image.replace(/[\/:]/g, '-')
 
 var toIndexKey = function(name) {
   var depth = name.split('/').length-1
