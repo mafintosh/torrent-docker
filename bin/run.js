@@ -10,7 +10,7 @@ var freeport = require('freeport')
 var net = require('net')
 var minimist = require('minimist')
 
-var argv = minimist(process.argv.slice(2), {alias:{peer:'p', tracker:'t'}})
+var argv = minimist(process.argv.slice(2), {alias:{peer:'p', tracker:'t', nomount:'n'}})
 var trackers = argv.t && [].concat(argv.t)
 
 var torrent = argv._[0]
@@ -21,6 +21,7 @@ if (!torrent || !container) {
   process.exit(1)
 }
 
+var noMount = [].concat(argv.nomount || [])
 var engine = torrents(fs.readFileSync(torrent), {trackers:trackers})
 var mnt = container+'/mnt'
 var data = container+'/data'
@@ -67,7 +68,7 @@ var log = function() {
 }
 
 setInterval(function() {
-//  log('down: %s/s, up: %s/s, peers: %d', pretty(engine.swarm.downloadSpeed()), pretty(engine.swarm.uploadSpeed()), engine.swarm.wires.length)
+  log('down: %s/s, up: %s/s, peers: %d', pretty(engine.swarm.downloadSpeed()), pretty(engine.swarm.uploadSpeed()), engine.swarm.wires.length)
 }, 1000)
 
 server.listen(10000)
@@ -80,6 +81,7 @@ server.once('error', function() {
 
 server.on('listening', function() {
   console.log('mounting container drive here: '+container+'/mnt')
+  if (noMount.length) console.log('not mounting: '+noMount.join(' '))
   console.log('access log server by doing: nc localhost %d', server.address().port)
   console.log('downloading filesystem index...')
   filesystem(mnt, data, {
@@ -95,13 +97,13 @@ server.on('listening', function() {
   }, function(err, fs) {
     if (err) throw err
     if (argv.docker === false) return console.log('torrent mounted...')
-    console.log('filesystem index loaded. booting vm...')
+    console.log('filesystem index loaded. booting vm...')  
     fs.readdir('/', function(err, files) {
       if (err) throw err
 
       files = files
         .filter(function(file) {
-          return file !== '.' && file !== '..' && file !== 'proc' && file !== 'dev'
+          return file !== '.' && file !== '..' && file !== 'proc' && file !== 'dev' && noMount.indexOf(file) === -1
         })
         .map(function(file) {
           return '-v '+container+'/mnt/'+file+':/'+file+' '
@@ -109,7 +111,7 @@ server.on('listening', function() {
         .join('').trim().split(/\s+/)
 
       var spawn = function() {
-        proc.spawn('docker', ['run', '--net', 'host', '-it', '--rm', '--entrypoint=/bin/bash'].concat(files).concat('scratch'), {stdio:'inherit'}).on('exit', function() {
+        proc.spawn('docker', ['run', '--net', argv.net || 'bridge', '-it', '--rm', '--entrypoint=/bin/bash'].concat(files).concat('scratch'), {stdio:'inherit'}).on('exit', function() {
           process.exit()
         })        
       }
@@ -122,7 +124,6 @@ server.on('listening', function() {
           fs.release('/etc/resolv.conf', fd, spawn)
         })
       })
-
     })
   })
 })
