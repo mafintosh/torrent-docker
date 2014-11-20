@@ -72,6 +72,13 @@ running in your image! If for some reason your boot process cannot find a seeder
 torrent-docker boot test-image.torrent my-container --peer 128.199.33.21:6441
 ```
 
+Optionally you can start your own tracker
+
+```
+torrent-docker tracker --port 8080
+torrent-docker boot test-image.torrent my-container --tracker 127.0.0.1:8080
+```
+
 ## Dependencies
 
 On OSX you'll need the following
