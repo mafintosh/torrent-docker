@@ -31,7 +31,7 @@ RUN apt-get update && apt-get install -qy curl vim
 Then build it
 
 ```
-docker build -t test-image
+docker build -t test-image .
 ```
 
 Now all we need to do is create a torrent from the docker image
