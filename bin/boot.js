@@ -108,8 +108,15 @@ server.on('listening', function() {
         })
         .join('').trim().split(/\s+/)
 
+      var vars = [].concat(argv.e || []).concat(argv.env || [])
+      var env = []
+
+      vars.forEach(function(v) {
+        env.push('-e', v)
+      })
+
       var spawn = function() {
-        proc.spawn('docker', ['run', '--net', argv.net || 'bridge', '-it', '--rm', '--entrypoint=/bin/bash'].concat(files).concat('scratch'), {stdio:'inherit'}).on('exit', function() {
+        proc.spawn('docker', ['run', '--net', argv.net || 'bridge', '-it', '--rm', '--entrypoint=/bin/bash'].concat(env).concat(files).concat('scratch'), {stdio:'inherit'}).on('exit', function() {
           process.exit()
         })        
       }

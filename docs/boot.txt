@@ -9,6 +9,7 @@ Usage: torrent-docker boot [torrent-file] [container-name]
   --net          to set the docker --net option
   --no-docker    do not boot the docker container - only mount the filesystem
   --nomount      do not mount this folder from the torrent
+  --env,-e       set an env var NAME=VALUE
 
   You can attach to the debug log by following the instruction printed out when
   booting this container (usualy nc localhost 10000)
