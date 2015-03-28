@@ -1,4 +1,4 @@
-var f4js = require('fuse4js')
+var fuse = require('fuse-bindings')
 var fs = require('fs')
 var collect = require('stream-collector')
 var p = require('path')
@@ -11,7 +11,6 @@ var level = require('level')
 var tar = require('tar-fs')
 var zlib = require('zlib')
 var shasum = require('shasum')
-var umount = require('./umount')
 var stream = require('stream')
 
 var ENOENT = -2
@@ -76,7 +75,7 @@ module.exports = function(mnt, container, opts, cb) {
           entry.size = stat ? stat.size : 0
           cb(null, entry)
         })
-      })      
+      })
     }
 
     handlers.getattr = function(path, cb) {
@@ -141,7 +140,7 @@ module.exports = function(mnt, container, opts, cb) {
         var fd = list.indexOf(null)
         if (fd === -1) fd = list.length
         list[fd] = data
-        cb(0, fd)        
+        cb(0, fd)
       }
 
       get(path, function(err, entry) {
@@ -190,7 +189,7 @@ module.exports = function(mnt, container, opts, cb) {
           if (err) return cb(EPERM)
           done(entry)
         })
-      })      
+      })
     }
 
     handlers.open = function(path, flags, cb) {
@@ -222,7 +221,7 @@ module.exports = function(mnt, container, opts, cb) {
       })
     }
 
-    handlers.read = function(path, offset, len, buf, handle, cb) {
+    handlers.read = function(path, handle, buf, len, offset, cb) {
       log('read', path, offset, len, handle)
 
       var list = files[path] || []
@@ -275,7 +274,7 @@ module.exports = function(mnt, container, opts, cb) {
       })
     }
 
-    handlers.write = function(path, offset, len, buf, handle, cb) {
+    handlers.write = function(path, handle, buf, len, offset, cb) {
       log('write', path, offset, len, handle)
 
       var list = files[path] || []
@@ -364,22 +363,22 @@ module.exports = function(mnt, container, opts, cb) {
       copyOnWrite(path, mode, true, function(err) {
         if (err) return cb(err)
         open(path, 1, cb)
-      })      
+      })
     }
 
-    handlers.getxattr = function(path, cb) {
+    handlers.getxattr = function(path, name, buffer, length, offset, cb) {
       log('getxattr')
 
       cb(EPERM)
     }
 
-    handlers.setxattr = function(path, name, value, size, a, b, cb) {
+    handlers.setxattr = function(path, name, buffer, length, offset, flags, cb) {
       log('setxattr')
 
       cb(0)
     }
 
-    handlers.statfs = function(cb) {
+    handlers.statfs = function(path, cb) {
       cb(0, {
         bsize: 1000000,
         frsize: 1000000,
@@ -399,12 +398,14 @@ module.exports = function(mnt, container, opts, cb) {
       cb()
     }
 
-    f4js.start(mnt, handlers, false, [])
-    if (cb) cb(null, handlers) 
+    fuse.mount(mnt, handlers, function (err) {
+      if (err) return cb(err)
+      cb(null, handlers)
+    })
   }
 
   fs.exists(p.join(store, 'db'), function(exists) {
-    if (exists) return umount(mnt, ready)
+    if (exists) return fuse.unmount(mnt, ready)
 
     mkdirp(p.join(store, 'layer'), function() {
       pump(
@@ -412,9 +413,9 @@ module.exports = function(mnt, container, opts, cb) {
         zlib.createGunzip(),
         tar.extract(p.join(store, 'db')),
         function() {
-          umount(mnt, ready)
+          fuse.unmount(mnt, ready)
         }
       )
-    })    
+    })
   })
 }

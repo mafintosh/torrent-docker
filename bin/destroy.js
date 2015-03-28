@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var umount = require('../umount')
+var fuse = require('fuse-bindings')
 var rimraf = require('rimraf')
 var fs = require('fs')
 var minimist = require('minimist')
@@ -13,6 +13,6 @@ if (!name || argv.help) {
   process.exit(0)
 }
 
-umount(name+'/mnt', function() {
+fuse.unmount(name+'/mnt', function() {
   rimraf.sync(name)
 })

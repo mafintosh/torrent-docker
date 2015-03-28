@@ -16,7 +16,7 @@
     "docker-run": "^2.0.0",
     "duplexify": "^3.2.0",
     "freeport": "^1.0.3",
-    "fuse4js": "git://github.com/mafintosh/fuse4js#truncate",
+    "fuse-bindings": "^2.1.2",
     "level": "^0.18.0",
     "lexicographic-integer": "^1.1.0",
     "minimist": "^1.1.0",
@@ -29,7 +29,7 @@
     "tar-fs": "^1.2.0",
     "tar-stream": "^1.1.1",
     "through2": "^0.6.3",
-    "torrent-stream": "^0.15.1"
+    "torrent-stream": "^0.18.0"
   },
   "devDependencies": {},
   "repository": {
