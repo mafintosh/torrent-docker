@@ -29,7 +29,7 @@
     "tar-fs": "^1.2.0",
     "tar-stream": "^1.1.1",
     "through2": "^0.6.3",
-    "torrent-stream": "^0.18.0"
+    "torrent-stream": "^0.18.1"
   },
   "devDependencies": {},
   "repository": {
