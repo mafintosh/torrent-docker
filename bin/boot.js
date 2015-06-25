@@ -116,7 +116,7 @@ server.on('listening', function() {
       })
 
       var spawn = function() {
-        proc.spawn('docker', ['run', '--net', argv.net || 'bridge', '-it', '--rm', '--entrypoint=/bin/bash'].concat(env).concat(files).concat('scratch'), {stdio:'inherit'}).on('exit', function() {
+        proc.spawn('docker', ['run', '--net', argv.net || 'bridge', '-it', '--rm', '--entrypoint=/bin/bash'].concat(env).concat(files).concat('tianon/true'), {stdio:'inherit'}).on('exit', function() {
           process.exit()
         })        
       }
