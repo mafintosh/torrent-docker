@@ -12,9 +12,10 @@ var tarfs = require('tar-fs')
 var createTorrent = require('create-torrent')
 var minimist = require('minimist')
 
-var argv = minimist(process.argv.slice(2))
+var argv = minimist(process.argv.slice(2), {alias:{'announce-list':'a'}})
 
 var image = argv._[0]
+var announceList = argv.a && [].concat(argv.a)
 
 if (!image || argv.help) {
   console.error(fs.readFileSync(__dirname+'/../docs/create.txt', 'utf-8'))
@@ -85,8 +86,12 @@ getImage(function(err, stream, id) {
         .on('finish', function() {
           tarfs.pack(dir+'/index').pipe(zlib.createGzip()).pipe(fs.createWriteStream(dir+'/index.tgz')).on('finish', function() {
             rimraf(dir+'/index', function() {
+              opts = {}
+              if (!!announceList) {
+                opts.announceList = [announceList]
+              }
               console.log('generating torrent file')
-              createTorrent(dir, function(err, buf) {
+              createTorrent(dir, opts, function(err, buf) {
                 if (err) throw err
                 fs.writeFile(dir+'.torrent', buf, function(err) {
                   if (err) throw err
